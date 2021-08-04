@@ -1,0 +1,16 @@
+<script>
+  function onAuthStateChanged(fn) {
+    var insideUser = { // 함수를 맡기고,
+      displayName: '홍길동',
+      uid: 'blahblahblah'
+    }
+    fn(insideUser); // 맡겨진 함수를 실행.
+  }
+
+  onAuthStateChanged(function(user) {
+    console.log(user.displayName);
+    console.log(user);
+  });
+
+  // $('.nnn').animal({"left": "100px"}, 1000, function() {})
+</script>
