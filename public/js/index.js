@@ -9,8 +9,8 @@ var googleAuth = new firebase.auth.GoogleAuthProvider();
 
 
 /* *************** event callback **************** */
-function onAuthChanged() {
-
+function onAuthChanged(user) {
+  console.log(user);
 };
 
 function onLogin() {
