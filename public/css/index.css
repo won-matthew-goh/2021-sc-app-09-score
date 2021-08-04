@@ -6,7 +6,7 @@ font-family: 'Nanum Gothic', sans-serif; */
 
 /* ************** Global *************** */
 html, body {font-family: 'Nanum Gothic', sans-serif; height: 2000px; font-size: 16px;}
-
+.wrapper {max-width: 1000px; margin: 2em auto;}
 
 /* ************** header-wrapper *************** */
 .header-wrapper {background-color: #333; color: #f8f8f8; font-family: 'Lato', sans-serif; display: flex; align-items: center;}
@@ -15,20 +15,37 @@ html, body {font-family: 'Nanum Gothic', sans-serif; height: 2000px; font-size: 
 .header-wrapper .navi-wrap {margin-left: auto; display: flex}
 .header-wrapper .navi-wrap .navi {padding: 1em 1.25em; cursor: pointer;}
 .header-wrapper .navi-wrap .navi:hover {background-color: azure; color: #111;}
-.header-wrapper .bt-logout {display: none;}
+.header-wrapper .bt-login {background-color: #571228;}
+.header-wrapper .bt-logout {display: none; background-color: #571228;}
 
 
-/* **************  *************** */
+/* ************** title-wrapper *************** */
+.title-wrapper {padding: 2.5em; background-color: lightsteelblue;}
+.title-wrapper h2.title {font-size: 2em; font-weight: bold; color: #3f454b; margin-bottom: .5em;}
+.title-wrapper h3.title {font-size: 1.25em; color: #6b7585;}
 
-@media screen and (max-width: 1199px) {
-  
+
+/* ************** test-wrapper *************** */
+.test-wrapper input {margin: 0 .5em .5em 0;}
+.test-wrapper input[name="username"] {max-width: 150px;}
+.test-wrapper input[name="comment"] {flex-grow: 1;}
+.test-wrapper button {margin-bottom: .5em;}
+
+
+/* ************** 반응형 *************** */
+@media screen and (max-width: 1032px) {
+  .wrapper {margin-left: 16px; margin-right: 16px;}
 }
+
 @media screen and (max-width: 991px) {
   
 }
+
 @media screen and (max-width: 767px) {
   
 }
+
 @media screen and (max-width: 575px) {
-  
+  .header-wrapper span.name {display: none;}
+  .test-wrapper input[name="username"] {max-width: 100%;}
 }

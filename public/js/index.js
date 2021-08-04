@@ -9,18 +9,47 @@ true 판정: false판정 외 모든것
 /************** global init ***************/
 console.log(firebase);
 var auth = firebase.auth();
-var db = firebase.database();
 var googleAuth = new firebase.auth.GoogleAuthProvider();
-// console.log(auth, db, googleAuth);
-
+var db = firebase.database();
+var user = null;
 
 /************** function init ***************/
 
 
 /************** event callback ***************/
-function onAuthChanged(user) { // auth상태가 변하면 알려줘
-	console.log(user);
+function onAdded(v) {
+  var n = $('.test-wrapper .tbody tr').length + 1;
+  var html = '<tr>';
+  html += '<td>'+n+'</td>';
+  html += '<td>'+v.val().username+'</td>';
+  html += '<td class="text-left">'+v.val().comment+'</td>';
+  html += '<td>'+moment(v.val().creatAt).format('YYYY-MM-DD HH:mm:ss')+'</td>';
+  html += '</tr>';
+  $(html).appendTo('.test-wrapper .tbody');
+}
+
+function onSubmit(f) {
+  if(!user) alert('로그인 후 사용하세요.');
+  else {
+    var data = {
+      username: f.username.value.trim(),
+      comment: f.comment.value.trim(),
+      createdAt : new Date().getTime(),
+      uid: user.uid,
+      email: user.email
+    }
+    if(data.username !== '' && data.comment !== '') {
+      db.ref('root/test').push(data);
+      f.reset();
+    }
+  }
+  return false;
+}
+
+function onAuthChanged(v) { // auth상태가 변하면 알려줘
+	user = v
 	if(user) {
+    db.ref('root/test').on('child_added', onAdded);
 		$('.bt-login').hide();
 		$('.bt-logout').show();
 		$('.photo-logo img').attr('src', user.photoURL);
@@ -33,6 +62,7 @@ function onAuthChanged(user) { // auth상태가 변하면 알려줘
 		$('.photo-logo').hide();
 		$('.icon-logo').show();
 	}
+  $('.test-wrapper .tbody').empty;
 }
 
 function onLogin() {
