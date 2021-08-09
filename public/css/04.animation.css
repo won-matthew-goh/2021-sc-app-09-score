@@ -1,0 +1,36 @@
+.container {display: flex; justify-content: space-between; margin: 100px auto;}
+.box {width: 150px; height: 150px; background-color: red;}
+.box1 {
+  animation-name: ani-box1;               /* keyframe 지정 */
+  animation-duration: 2s;                 /* animation 속도 */
+  animation-fill-mode: forwards;          /* default: backwards */
+  animation-iteration-count: infinite;    /* animation 반복횟수 */
+  animation-direction: alternate;         /* normal, reverse, alternate, alternate-reverse */
+  animation-delay: .5s;
+  animation-play-state: running;          /* running, paused */
+  animation-timing-function: ease;        /* ease, ease-in, ease-out, ease-in-out, linear */
+}
+.box2 {
+  animation-name: ani-box2;
+  animation-duration: 10s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+  animation-play-state: paused;
+}
+
+@keyframes ani-box1 {
+  from {transform: translateY(0);}
+  to {transform: translateY(500px);}
+}
+
+@keyframes ani-box2 {
+  0% {transform: translate(0,0) rotate(0); background-color: red;}
+  15% {transform: translate(0,200px) rotate(360deg); background-color: #ffae00;}
+  30% {transform: translate(300px, 200px) rotate(0);}
+  45% {transform: translate(300px, 400px) rotate(360deg); background-color: #ffae00;}
+  60% {transform: translate(300px, 0) rotate(-360deg); background-color: #1eac0c;}
+  75% {transform: translate(500px,0) rotate(-760deg); background-color: #0c64ac;}
+  90% {transform: translate(0,0) rotate(0); background-color: #710cac;}
+  100% {background-color: red;}
+}
