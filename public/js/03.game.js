@@ -51,7 +51,7 @@ function addList(selector, data) {
     html  = '<tr>'
     html += '<td class="score">'+(i + 1)+'등</td>'
     html += '<td class="name">'+data[i].name+'</td>'
-    html += '<td class="time">'+data[i]/1000+'초</td>'
+    html += '<td class="time">'+data[i].speed/1000+'초</td>'
     html += '</tr>';
     $(selector).append(html);
   }
