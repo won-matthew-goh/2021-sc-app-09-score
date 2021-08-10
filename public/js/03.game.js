@@ -93,7 +93,8 @@ function onStart() {
       speed: random(1500, 200)
       });
     });
-    result = JSON.parse(JSON.stringify(members)); // Deepcopy
+    // result = JSON.parse(JSON.stringify(members)); // Deepcopy
+    result = _.cloneDeep(members); // Deepcopy
     result.sort(function(a, b) { return a.speed - b.speed; });
     addList('.modal-wrapper .list-tbody', result); // table 생성 끝
     $('.member-wp').each(function(i) {
@@ -104,22 +105,24 @@ function onStart() {
 }
 
 function onReset() {
-  $('.bt-init').show();
-  $('.bt-start').hide();
-  $('.bt-reset').hide();
+  $('.bt-init').attr('disabled', false).show();
+  $('.bt-start').attr('disabled', false).hide();
+  $('.bt-reset').attr('disabled', false).hide();
   $('#cnt').val(4).focus().attr('readonly', false);
-  // removeEl('.stage-wrap', true);
-  removeEl('.member-wp');
+  removeEl('.stage-wrap', true);
+  removeEl('.modal-wrapper .list-tbody', true);
+  removeEl('.modal-wrapper .datetime', true);
 }
 
 function onModalClose() {
   $('.modal-wrapper').hide();
+  $('.main-wrapper .bt-reset').attr('disabled', false);
 }
 
 /*************** event init *****************/
-$('.wrapper .bt-init').click(onInit);
-$('.wrapper .bt-start').click(onStart);
-$('.wrapper .bt-reset').click(onReset);
+$('.main-wrapper .bt-init').click(onInit);
+$('.main-wrapper .bt-start').click(onStart);
+$('.main-wrapper .bt-reset').click(onReset);
 
 $('.modal-wrapper .bt-close').click(onModalClose);
 /*************** start init *****************/
