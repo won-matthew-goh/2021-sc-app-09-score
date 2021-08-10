@@ -1,18 +1,18 @@
 .wrapper {max-width: 1200px; margin: auto;}
-.main-title {font-size: 1.25em; font-weight: bold; padding: 1em; margin: .5em 0;}
+.main-wrapper .main-title {font-size: 1.25em; font-weight: bold; padding: 1em; margin: .5em 0;}
 
-form[name="initForm"] {margin-bottom: 2em; border-bottom: 1px solid #dedede; padding-bottom: .5em;}
-form[name="initForm"] input[name="cnt"] {font-size: 1.5em; width: 90px; text-align: center;}
-form[name="initForm"] button {font-size: 1.25em; padding: .375em .75em; margin-left: .25em;}
-form[name="initForm"] .bt-init {}
-form[name="initForm"] .bt-start {display: none;}
-form[name="initForm"] .bt-reset {display: none;}
+.main-wrapper form[name="initForm"] {margin-bottom: 2em; border-bottom: 1px solid #dedede; padding-bottom: .5em;}
+.main-wrapper form[name="initForm"] input[name="cnt"] {font-size: 1.5em; width: 90px; text-align: center;}
+.main-wrapper form[name="initForm"] button {font-size: 1.25em; padding: .375em .75em; margin-left: .25em;}
+.main-wrapper form[name="initForm"] .bt-init {}
+.main-wrapper form[name="initForm"] .bt-start {display: none;}
+.main-wrapper form[name="initForm"] .bt-reset {display: none;}
 
 
-.stage-wrap {position: relative;}
-.stage-wrap::after {content: ''; display: block; width: 0; height: calc(100% - 2em); position: absolute; top: 1em; right: 100px; border: 1px dashed #dedede;}
-.stage-wrap .member-wp {width: 80px; margin-bottom: 2em; position: relative;}
-.stage-wrap .member-wp .imgs {
+.main-wrapper .stage-wrap {position: relative;}
+.main-wrapper .stage-wrap::after {content: ''; display: block; width: 0; height: calc(100% - 2em); position: absolute; top: 1em; right: 100px; border: 1px dashed #dedede;}
+.main-wrapper .stage-wrap .member-wp {width: 80px; margin-bottom: 2em; position: relative;}
+.main-wrapper .stage-wrap .member-wp .imgs {
 	animation-name: ani-member;
 	animation-duration: .5s;
 	animation-direction: alternate;

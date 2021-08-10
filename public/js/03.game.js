@@ -51,6 +51,10 @@ function removeEl(selector, empty) {
   else $(selector).remove(); 
 }
 
+function showEl(selector, show) {
+  $(selector).show();
+}
+
 function getTarget() {
   return ($('.stage-wrap').outerWidth() - $('.member-wp').outerWidth() - 10) + 'px';
 }
@@ -87,10 +91,15 @@ function onReset() {
   removeEl('.member-wp');
 }
 
-/*************** event init *****************/
-$('.bt-init').click(onInit);
-$('.bt-start').click(onStart);
-$('.bt-reset').click(onReset);
+function onModalClose() {
+  $('.modal-wrapper').hide();
+}
 
+/*************** event init *****************/
+$('.wrapper .bt-init').click(onInit);
+$('.wrapper .bt-start').click(onStart);
+$('.wrapper .bt-reset').click(onReset);
+
+$('.modal-wrapper .bt-close').click(onModalClose);
 /*************** start init *****************/
 
