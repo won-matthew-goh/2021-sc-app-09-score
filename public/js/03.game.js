@@ -11,119 +11,115 @@
  */
 
 // database 저장
-/* 
+/*
 {
-  uid: '',
-  ip: '',
-  dt: 1694759939994,
-  result: [
-    { name: '홍길동', speed: 1513 },
-    { name: '홍길순', speed: 1523 },
-    { name: '홍길만', speed: 1578 },
-    { name: '홍길룡', speed: 1628 }
-  ]
+	uid: '',
+	ip: '',
+	dt: 1693474929398,
+	result: [
+		{ name: '홍길동', speed: 1513 },
+		{ name: '홍길순', speed: 1523 },
+		{ name: '홍길만', speed: 1578 },
+		{ name: '홍길룡', speed: 1629 }
+	]
 }
 */
 
 console.log( document.initForm.cnt.value ); //js
- console.log( document.querySelector('form[name="initForm"] input[name="cnt"]').value ); //js
- console.log( $('form[name="initForm"] input[name="cnt"]').val() ); //jquery
- console.log( $('#cnt').val() ); //jquery
+console.log( document.querySelector('form[name="initForm"] input[name="cnt"]').value ); //js
+console.log( $('form[name="initForm"] input[name="cnt"]').val() ); //jquery
+console.log( $('#cnt').val() ); //jquery
 
-/*************** global init ****************/
+/*************** global init **************/
 
 
-/*************** user function **************/
+
+/************** user function *************/
 function addMember(selector, n) {
-  for(var i=0; i<n; i++) {
-    html  = '<div class="member-wp">';
-    html += '<div class="imgs">';
-    html += '<img src="../img/marathon.png" class="w100">';
-    html += '</div>';
-    html += '<input type="text" name="member" class="form-control">';
-    html += '</div>';
-    $(selector).append(html);
-  }
+	for(var i=0, html; i<n; i++) {
+		html  = '<div class="member-wp">';
+		html += '<div class="imgs">';
+		html += '<img src="../img/marathon.png" class="w100">';
+		html += '</div>';
+		html += '<input type="text" name="member" class="form-control">';
+		html += '</div>';
+		$(selector).append(html);
+	}
 }
 
 function addList(selector, data) {
-  for(var i=0; i<data.length; i++) {
-    html  = '<tr>'
-    html += '<td class="score">'+(i + 1)+'등</td>'
-    html += '<td class="name">'+data[i].name+'</td>'
-    html += '<td class="time">'+data[i].speed/1000+'초</td>'
-    html += '</tr>';
-    $(selector).append(html);
-  }
+	for(var i=0, html; i<data.length; i++) {
+		html  = '<tr>';
+		html += '<td class="score">'+(i + 1)+'등</td>';
+		html += '<td class="name">'+data[i].name+'</td>';
+		html += '<td class="time">'+data[i].speed/1000+'초</td>';
+		html += '</tr>';
+		$(selector).append(html);
+	}
 }
 
 function removeEl(selector, empty) {
-  if(empty) $(selector).empty();
-  else $(selector).remove(); 
-}
-
-function showEl(selector, show) {
-  $(selector).show();
+	if(empty) $(selector).empty();
+	else $(selector).remove(); 
 }
 
 function getTarget() {
-  return ($('.stage-wrap').outerWidth() - $('.member-wp').outerWidth() - 10) + 'px';
+	return ($('.stage-wrap').outerWidth() - $('.member-wp').outerWidth() - 10) + 'px';
 }
 
-/*************** event callback *************/
+/************** event callback ************/
 function onInit() {
-  $('.bt-init').hide();
-  $('.bt-start').show();
-  $('.bt-reset').show();
-  $('#cnt').attr('readonly', true);
-  addMember('.stage-wrap', $('#cnt').val());
+	$('.bt-init').hide();
+	$('.bt-start').show();
+	$('.bt-reset').show();
+	$('#cnt').attr('readonly', true);
+	addMember('.stage-wrap', $('#cnt').val());
 }
 
 function onStart() {
-  var cnt = $('.member-wp').length, num = 0;
-  var members = []; // 선수 정보
-  var result = [];  // 결과 sorting
-  
-  $('.bt-start').attr('disabled', true);
-  $('.bt-reset').attr('disabled', true);
-  $('.modal-wrapper .datetime').html(moment().format('YYYY년 M월 D일 HH시 mm분 ss초'));
-  $('.member-wp').each(function(i) {
-    members.push({
-      name: $(this).find('input').val().trim() || (i+1) + '번',
-      speed: random(1500, 200)
-      });
-    });
-    // result = JSON.parse(JSON.stringify(members)); // Deepcopy
-    result = _.cloneDeep(members); // Deepcopy
-    result.sort(function(a, b) { return a.speed - b.speed; });
-    addList('.modal-wrapper .list-tbody', result); // table 생성 끝
-    $('.member-wp').each(function(i) {
-    $(this).stop().animate({'left': getTarget()}, members[i].speed, function() {
-      if(++num === cnt) $('.modal-wrapper').show();
-    });
-  });
+	var cnt = $('.member-wp').length, num = 0;
+	var members = []; // 선수 정보
+	var result = []; 	// 결과 sorting
+
+	$('.bt-start').attr('disabled', true);
+	$('.bt-reset').attr('disabled', true);
+	$('.modal-wrapper .datetime').html(moment().format('YYYY년 M월 D일 HH시 mm분 ss초'));
+	$('.member-wp').each(function(i) {
+		members.push({
+			name: $(this).find('input').val().trim() || (i+1) + '번',
+			speed: random(1500, 200)
+		});
+	}); // members 데이터 넣기 완료
+	result = JSON.parse(JSON.stringify(members)); // Deepcopy
+	result.sort(function(a, b) { return a.speed - b.speed });
+	addList('.modal-wrapper .list-tbody', result); // table 생성 끝
+	$('.member-wp').each(function(i) { // animation
+		$(this).stop().animate({'left': getTarget()}, members[i].speed, function() {
+			if(++num === cnt) $('.modal-wrapper').show();
+		});
+	});
 }
 
 function onReset() {
-  $('.bt-init').attr('disabled', false).show();
-  $('.bt-start').attr('disabled', false).hide();
-  $('.bt-reset').attr('disabled', false).hide();
-  $('#cnt').val(4).focus().attr('readonly', false);
-  removeEl('.stage-wrap', true);
-  removeEl('.modal-wrapper .list-tbody', true);
-  removeEl('.modal-wrapper .datetime', true);
+	$('.bt-init').show();
+	$('.bt-start').hide();
+	$('.bt-reset').hide();
+	$('#cnt').val(4).focus().attr('readonly', false);
+	removeEl('.stage-wrap', true);
 }
 
 function onModalClose() {
-  $('.modal-wrapper').hide();
-  $('.main-wrapper .bt-reset').attr('disabled', false);
+	$('.modal-wrapper').hide();
 }
 
-/*************** event init *****************/
-$('.main-wrapper .bt-init').click(onInit);
-$('.main-wrapper .bt-start').click(onStart);
-$('.main-wrapper .bt-reset').click(onReset);
+/*************** event init ***************/
+$('.wrapper .bt-init').click(onInit);
+$('.wrapper .bt-start').click(onStart);
+$('.wrapper .bt-reset').click(onReset);
 
 $('.modal-wrapper .bt-close').click(onModalClose);
-/*************** start init *****************/
+
+
+
+/*************** start init ***************/
 
