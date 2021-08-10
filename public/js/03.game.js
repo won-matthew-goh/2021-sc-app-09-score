@@ -46,6 +46,17 @@ function addMember(selector, n) {
   }
 }
 
+function addList(selector, data) {
+  for(var i=0; i<data.length; i++) {
+    html  = '<tr>'
+    html += '<td class="score">'+(i + 1)+'등</td>'
+    html += '<td class="name">'+data[i].name+'</td>'
+    html += '<td class="time">'+data[i]/1000+'초</td>'
+    html += '</tr>';
+    $(selector).append(html);
+  }
+}
+
 function removeEl(selector, empty) {
   if(empty) $(selector).empty();
   else $(selector).remove(); 
@@ -69,18 +80,27 @@ function onInit() {
 }
 
 function onStart() {
+  var cnt = $('.member-wp').length, num = 0;
+  var members = []; // 선수 정보
+  var result = [];  // 결과 sorting
+  
   $('.bt-start').attr('disabled', true);
   $('.bt-reset').attr('disabled', true);
+  $('.modal-wrapper .datetime').html(moment().format('YYYY년 M월 D일 HH시 mm분 ss초'));
   $('.member-wp').each(function(i) {
-    var speed = random(1500, 200);
-    $(this).stop().animate({'left': getTarget()}, speed, function() {
+    members.push({
+      name: $(this).find('input').val().trim() || (i+1) + '번',
+      speed: random(1500, 200)
+      });
     });
-  })
-  // animation이 완료된 후
-  var cnt = $('.member-wp').length, num = 0;
-  function animateCb() {
-    if(++num === cnt) $('.modal-wrapper').show();
-  }
+    result = JSON.parse(JSON.stringify(members)); // Deepcopy
+    result.sort(function(a, b) { return a.speed - b.speed; });
+    addList('.modal-wrapper .list-tbody', result); // table 생성 끝
+    $('.member-wp').each(function(i) {
+    $(this).stop().animate({'left': getTarget()}, members[i].speed, function() {
+      if(++num === cnt) $('.modal-wrapper').show();
+    });
+  });
 }
 
 function onReset() {
