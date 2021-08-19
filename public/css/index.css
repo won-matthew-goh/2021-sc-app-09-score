@@ -1,0 +1,53 @@
+/********************** global init *********************/
+.wrapper {max-width: 1200px; margin: 1.5em auto; overflow: hidden;}
+
+/* ************** header-wrapper *************** */
+.header-wrapper {background-color: #333; color: #f8f8f8; font-family: 'Lato', sans-serif; display: flex; align-items: center;}
+.header-wrapper .logo-wrap {font-size: 1.25em; padding-left: .75em; display: flex; align-items: center;}
+.header-wrapper .logo-wrap .photo-logo {width: 40px; height: 40px; border-radius: 20px; margin-right: .5em; overflow: hidden; display: none;}
+.header-wrapper .navi-wrap {margin-left: auto; display: flex}
+.header-wrapper .navi-wrap .navi {padding: 1em 1.25em; cursor: pointer;}
+.header-wrapper .navi-wrap .navi:hover {background-color: azure; color: #111;}
+.header-wrapper .bt-login {background-color: #571228;}
+.header-wrapper .bt-logout {display: none; background-color: #571228;}
+
+
+/********************** recent-wrapper *********************/
+.recent-wrapper .title-wrap {margin-bottom: .5em; border-left: 3px solid #9be67e; padding-left: .5em;}
+.recent-wrapper .title-wrap h2.title {font-size: 1.25em;}
+.recent-wrapper .list-wrap {border: 1px solid #efefef; padding: .5em; overflow: hidden;}
+.recent-wrapper .list-wrap .list-wp {display: flex; align-items: flex-start; width: 101%;}
+.recent-wrapper .list-wrap .list-wp .list {width: 19%; margin-right: 1%}
+
+
+/********************** write-wrapper *********************/
+.write-wrapper {padding: 1em; text-align: center;}
+
+
+/********************** list-wrapper *********************/
+
+
+
+/********************** footer-wrapper *********************/
+
+
+/********************** 반응형 설정 ***********************/
+@media (max-width: 1399px) {
+  
+}
+
+@media (max-width: 1199px) {
+  
+}
+
+@media (max-width: 991px) {
+  
+}
+
+@media (max-width: 767px) {
+  
+}
+
+@media (max-width: 575px) {
+  
+}
