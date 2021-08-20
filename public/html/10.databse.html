@@ -1,0 +1,24 @@
+<script src="/__/firebase/8.9.1/firebase-app.js"></script>
+<script src="/__/firebase/8.9.1/firebase-database.js"></script>
+<script src="/__/firebase/init.js?useEmulator=true"></script>
+<script>
+var db = firebase.database().ref('root/board');
+
+db.on('child_added', onAdded);
+db.on('child_changed', onChanged);
+db.on('child_removed', onRemoved);
+
+db.get().then();
+
+function onAdded(r) {
+  console.log(r.val());
+}
+
+function onChanged(r) {
+  console.log(r.val());
+}
+
+function onRemoved(r) {
+  console.log(r.val());
+}
+</script>

@@ -5,8 +5,20 @@ $().parent()    // 주어's 부모        parentNode
 $().parents()   // 주어's 조상들      parentNode
 $().siblings()  // 주어's 형제/자매
 $().children()  // 주어's 자식        childNodes
-$().find()      // 주어's 자손
+$().find()      // 주어's 자손        childNodes
+
+firebase data 처리
+1. 실시간
+db.on('child_added', onAdded);      // return 추가된 데이터
+db.on('child_changed', onChanged);  // return 수정된 데이터
+db.on('child_removed', onRemoved);  // return 삭제된 데이터
+2. 이벤트에 의해서...
+db.push().key                       // 데이터 저장
+db.set({})                          // 데이터 수정
+db.remove()                         // 데이터 삭제
+db.get()                            // 데이터 가져오기
 */
+
 
 /*************** global init **************/
 var auth = firebase.auth();
@@ -16,6 +28,7 @@ var firebaseStorage = firebase.storage();
 var db = firebaseDatabase.ref('root/board');
 var storage = firebaseStorage.ref('root/board');
 var user = null;
+var allowType = ['image/jpeg', 'image/jpg', 'image/gif', 'video/mp4'];
 
 /************** element init **************/
 var btSave = document.querySelector('.write-wrapper .bt-save');				// 글작성 버튼
@@ -77,16 +90,27 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
 	e.preventDefault();
 	var title = writeForm.title;
 	var writer = writeForm.writer;
-	var upfile = writeForm.upfile.files;
-	var content = writeForm.content.value.trim();
+	var upfile = writeForm.upfile;
+	var content = writeForm.content;
 	if(!requiredValid(title)) {
-    title.focus();
-    return false;
+		title.focus();
+		return false;
 	}
 	if(!requiredValid(writer)) {
 		writer.focus();
-    return false;
+		return false;
 	}
+	if(!upfileValid(upfile)) {
+		return false;
+	}
+	// firebase save
+	var data = {};
+	data.user = user.uid;
+	data.title = title.value;
+	data.writer = writer.value;
+	data.content = content.value;
+	data.file = (upfile.files.length) ? upfile.files[0] : {};
+	db.push(data).key; // firebase저장
 }
 
 function onRequiredValid(e) { // title, writer에서 blur/keyup되면
@@ -109,15 +133,19 @@ function requiredValid(el) {
 }
 
 function onUpfileChange(e) { // upfile에서 change되면
+  upfileValid(this);
+}
+
+function upfileValid(el) {
   var next = $(el).next()[0];
-  if(this.files.length > 0 && allowType.indexOf(this.files[0] > -1)) {
-      this.classList.remove('active');
-      next.classList.remove('active');
+  if(el.files.length > 0 && allowType.indexOf(el.files[0].type) === -1) {
+      el.classList.add('active');
+      next.classList.add('active');
       return true;
   }
   else {
-    this.classList.add('active');
-    next.classList.add('active');
+    el.classList.remove('active');
+    next.classList.remove('active');
     return false;
   }
 }
@@ -137,7 +165,9 @@ writeForm.writer.addEventListener('blur', onRequiredValid);
 writeForm.writer.addEventListener('keyup', onRequiredValid);
 writeForm.upfile.addEventListener('change', onUpfileChange);
 
-
+// db.on('child_added', onAdded);
+// db.on('child_changed', onChanged);
+// db.on('child_removed', onRemoved);
 
 
 /*************** start init ***************/
