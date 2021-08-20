@@ -16,60 +16,56 @@ var writeWrapper = document.querySelector('.write-wrapper');					// 글작성 �
 var writeForm = document.writeForm;																		// 글작성 form
 
 
+/*************** user function **************/
 
-/************** user function *************/
 
-
-/************** event callback ************/
-function onAuthChanged(r) { // login, logout 상태가 변하면...
-	user = r;
-	if(user) {	// 로그인 되면 UI가 할일
-		btLogin.style.display = 'none';
-		btLogout.style.display = 'block';
-	}
-	else {	// 로그아웃 되면 UI가 할일
-		btLogin.style.display = 'block';
-		btLogout.style.display = 'none';
-	}
+/*************** event callback *************/
+function onAuthChanged(r) { // login, logout 상태가 변하면
+  user = r;
+  if(user) { // 로그인 되면 UI가 할 일
+    btLogin.style.display = 'none';
+    btLogout.style.display = 'block';
+  }
+  else { // 로그아웃 되면 UI가 할 일
+    btLogin.style.display = 'block';
+    btLogout.style.display = 'none';
+  }
 }
 
-function onLogin() {	// btLogin이 클릭되면
-	auth.signInWithPopup(googleAuth);
+function onLogin() { // btLogin이 클릭되면
+  auth.signInWithPopup(googleAuth);
 }
 
-function onLogout() {	// btLogout이 클릭되면
-	auth.signOut();
+function onLogout() { // btLogout이 클릭되면
+  auth.signOut();
 }
 
 function onWrite() { // 모달창이 오픈되면
-	$(writeWrapper).stop().fadeIn(300);
-	writeForm.title.focus();
+  $(writeWrapper).stop().fadeIn(300);
+  writeForm.title.focus();
 }
 
-function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
-	e.preventDefault();
-	var title = writeForm.title.value.trim();
-	var writer = writeForm.writer.value.trim();
-	var upfile = writeForm.upfile.files;
-	var content = writeForm.content.value.trim();
-	if(title === '') {
+function onWriteSubmit(e) { // btSave 클릭시 (글 저장시) // validation 검증
+  e.preventDefault();
+  var title = writeForm.title.value.trim();
+  var writer = writeForm.writer.value.trim();
+  var upfile = writeForm.upfile.files;
+  var content = writeForm.content.value.trim();
+  if(title === '') {
 
-	}
-	if(writer === '') {
-		
-	}
+  }
+  if(writer === '') {
+    
+  }
 }
 
 
-/*************** event init ***************/
+/*************** event init *****************/
 auth.onAuthStateChanged(onAuthChanged);
-btLogin.addEventListener('click', onLogin);
-btLogout.addEventListener('click', onLogout);
-btWrite.addEventListener('click', onWrite);
-writeForm.addEventListener('submit', onWriteSubmit);
+btLogin.addEventListner('click', onLogin);
+btLogout.addEventListner('click', onLogout);
+btWrite.addEventListner('click', onWrite);
+writeForm.addEventListner('submit', onWriteSubmit);
 
-
-
-
-/*************** start init ***************/
+/*************** start init *****************/
 
