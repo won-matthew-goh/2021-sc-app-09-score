@@ -108,8 +108,18 @@ function requiredValid(el) {
   }
 }
 
-function onUpfileValid(e) { // upfile에서
-
+function onUpfileChange(e) { // upfile에서 change되면
+  var next = $(el).next()[0];
+  if(this.files.length > 0 && allowType.indexOf(this.files[0] > -1)) {
+      this.classList.remove('active');
+      next.classList.remove('active');
+      return true;
+  }
+  else {
+    this.classList.add('active');
+    next.classList.add('active');
+    return false;
+  }
 }
 
 
@@ -125,7 +135,7 @@ writeForm.title.addEventListener('blur', onRequiredValid);
 writeForm.title.addEventListener('keyup', onRequiredValid);
 writeForm.writer.addEventListener('blur', onRequiredValid);
 writeForm.writer.addEventListener('keyup', onRequiredValid);
-writeForm.upfile.addEventListener('blur', onUpfileValid);
+writeForm.upfile.addEventListener('change', onUpfileChange);
 
 
 
