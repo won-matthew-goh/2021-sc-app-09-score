@@ -141,12 +141,12 @@ function upfileValid(el) {
   if(el.files.length > 0 && allowType.indexOf(el.files[0].type) === -1) {
       el.classList.add('active');
       next.classList.add('active');
-      return true;
+      return false;
   }
   else {
     el.classList.remove('active');
     next.classList.remove('active');
-    return false;
+    return true;
   }
 }
 
@@ -156,8 +156,8 @@ auth.onAuthStateChanged(onAuthChanged);
 btLogin.addEventListener('click', onLogin);
 btLogout.addEventListener('click', onLogout);
 btWrite.addEventListener('click', onWrite);
-btReset.addEventListener('click', onWriteReset);
 btClose.addEventListener('click', onClose);
+btReset.addEventListener('click', onWriteReset);
 writeForm.addEventListener('submit', onWriteSubmit);
 writeForm.title.addEventListener('blur', onRequiredValid);
 writeForm.title.addEventListener('keyup', onRequiredValid);
