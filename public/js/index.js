@@ -82,6 +82,7 @@ function onWriteReset(e) {
   writeForm.writer.classList.remove('active');
   writeForm.content.value = '';
   document.querySelectorAll('.required-coment').forEach(function(v,i) {
+    console.log(v);
     v.classList.remove('active');
   });
 }
@@ -109,6 +110,7 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
 	data.title = title.value;
 	data.writer = writer.value;
 	data.content = content.value;
+  data.createAt = new Date().getTime();
 	data.file = (upfile.files.length) ? upfile.files[0] : {};
 	db.push(data).key; // firebase저장
 }
@@ -165,9 +167,9 @@ writeForm.writer.addEventListener('blur', onRequiredValid);
 writeForm.writer.addEventListener('keyup', onRequiredValid);
 writeForm.upfile.addEventListener('change', onUpfileChange);
 
-// db.on('child_added', onAdded);
-// db.on('child_changed', onChanged);
-// db.on('child_removed', onRemoved);
+db.on('child_added', onAdded);
+db.on('child_changed', onChanged);
+db.on('child_removed', onRemoved);
 
 
 /*************** start init ***************/
