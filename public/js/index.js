@@ -1,3 +1,13 @@
+/* 
+$().next()      // 바로다음           nextSibling
+$().prev()      // 바로 전           previousSibling
+$().parent()    // 주어's 부모        parentNode
+$().parents()   // 주어's 조상들      parentNode
+$().siblings()  // 주어's 형제/자매
+$().children()  // 주어's 자식        childNodes
+$().find()      // 주어's 자손
+*/
+
 /*************** global init **************/
 var auth = firebase.auth();
 var googleAuth = new firebase.auth.GoogleAuthProvider();
@@ -21,13 +31,13 @@ var writeForm = document.writeForm;																		// 글작성 form
 
 
 /************** event callback ************/
-function onAuthChanged(r) { // login, logout 상태가 변하면...
+function onAuthChanged(r) { // login, logout 상태가 변하면
 	user = r;
-	if(user) {	// 로그인 되면 UI가 할일
+	if(user) {	// 로그인 되면 UI가 할 일
 		btLogin.style.display = 'none';
 		btLogout.style.display = 'block';
 	}
-	else {	// 로그아웃 되면 UI가 할일
+	else {	// 로그아웃 되면 UI가 할 일
 		btLogin.style.display = 'block';
 		btLogout.style.display = 'none';
 	}
@@ -60,6 +70,25 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
 	}
 }
 
+function onRequiredValid(e) { // title, writer에서 blur/keyup되면
+  var el = e.target;
+  var next = $(e.target).next()[0];
+  if(el.value.trim() === '') {
+    el.classList.add('active');
+    next.style.display = 'block';
+    return false;
+  }
+  else {
+    el.classList.remove('active');
+    next.style.display = 'none';
+    return true;
+  }
+}
+
+function onUpfileValid(e) { // upfile에서 blur/keyup되면
+
+}
+
 
 /*************** event init ***************/
 auth.onAuthStateChanged(onAuthChanged);
@@ -67,6 +96,11 @@ btLogin.addEventListener('click', onLogin);
 btLogout.addEventListener('click', onLogout);
 btWrite.addEventListener('click', onWrite);
 writeForm.addEventListener('submit', onWriteSubmit);
+writeForm.title.addEventListener('blur', onRequiredValid);
+writeForm.title.addEventListener('keyup', onRequiredValid);
+writeForm.writer.addEventListener('blur', onRequiredValid);
+writeForm.writer.addEventListener('keyup', onRequiredValid);
+writeForm.upfile.addEventListener('blur', onUpfileValid);
 
 
 
