@@ -1,4 +1,7 @@
 /* 
+$().method().method().method()
+
+
 $().next()      // 바로다음           nextSibling
 $().prev()      // 바로 전           previousSibling
 $().parent()    // 주어's 부모        parentNode
@@ -42,19 +45,29 @@ var btReset = document.querySelector('.write-wrapper .bt-reset');			// 글작성
 var writeWrapper = document.querySelector('.write-wrapper');					// 글작성 모달창
 var writeForm = document.writeForm;																		// 글작성 form
 var loading = document.querySelector('.write-wrapper .loading-wrap');	// 파일 업로드 로딩바
-var observerEl = document.querySelector('.observer-el');
 var tbody = document.querySelector('.list-tbl tbody');
+var recent = document.querySelector('.recent-wrapper .list-wp');
+var tr;
 
-var page = 1;
-var listCnt = 3;
-var pagerCnt = 3;
-var totalRecord = 0;
-var observer = new IntersectionObserver(onObserver, {});
+var observer; // IntersectionObserver의 Instance
+var listCnt = 5; // 데이터를 한 번에 불러올 갯수
 
 /************** user function *************/
-function listInit() {
+function listInit() { // 처음, 데이터를 생성
   tbody.innerHTML = '';
-  ref.limitToFirst(listCnt).get().then(onGetData).catch(onGetError);
+  ref
+    .limitToFirst(listCnt)
+    .get()
+    .then(onGetData)
+    .catch(onGetError);
+}
+
+function recentInit(ref) {
+  ref
+    .limitToFirst(1)
+    .get()
+    .then(onGetRecent)
+    .catch(onGetError);
 }
 
 function setHTML(k, v) {
@@ -72,6 +85,8 @@ function setHTML(k, v) {
   html += '<td>0</td>';
   html += '</tr>';
   tbody.innerHTML += html;
+  tr = tbody.querySelectorAll('tr');
+  observer.observe(tr[tr.length - 1]);
   sortTr();
 }
 
@@ -79,32 +94,44 @@ function sortTr() {
   var total = tbody.querySelectorAll('tr').length;
   tbody.querySelectorAll('tr').forEach(function(v, i) {
     v.querySelector('td').innerHTML = total - i;
-  })
+  });
 }
 
 /************** event callback ************/
 function onObserver(el, observer) {
   el.forEach(function(v) {
-    console.log(v.isIntersecting);
     if(v.isIntersecting) {
-      var tr = tbody.querySelectorAll('tr');
-      if(tr.length > 0) {
-        console.log(tr[tr.length-1]);
-        var last = Number(tr[tr.lenth - 1].dataset['idx']);
-        ref.startAfter(last).limitToFirst(listCnt).get().then(onGetData).catch(onGetError);
-      }
-      else {
-        ref.limitToFirst(listCnt).get().then(onGetData).catch(onGetError);
-      }
+      tr = tbody.querySelectorAll('tr');
+      var last = Number(tr[tr.length - 1].dataset['idx']);
+      ref.startAfter(last).limitToFirst(listCnt).get().then(onGetData).catch(onGetError);
+      observer.unobserve(v.target);
     }
   });
 }
 
 function onGetData(r) {
   r.forEach(function(v, i) {
-    console.log(v.key);
     setHTML(v.key, v.val());
   });
+}
+
+
+function onGetRecent(r) {
+  if(r.numChildren() > 0) { // 데이터가 존재함
+    r.forEach(function(v, i) {
+      var isImg = v.val().upfile && v.val().upfile.file.type !== allowType[3];
+      if(isImg) {
+        var html = '<li class="list" data-idx="'+v.val().idx+'" style="background-image: url(\''+v.val().upfile.path+'\')">'
+        html += '<div class="ratio"></div>'
+        html += '</li>'
+        recent.innerHTML += html;
+      }
+      var li = recent.querySelectorAll('li');
+      var cnt = li.length;
+      var last = cnt - 1;
+      if(last < 5) recentInit(ref.startAfter(v.val().idx));
+    });
+  }
 }
 
 function onGetError(e) {
@@ -163,6 +190,7 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
 	var writer = writeForm.writer;
 	var upfile = writeForm.upfile;
 	var content = writeForm.content;
+  var upload;
   if(!user) {
     alert('로그인 후 이용해주세요.');
     return false;
@@ -203,7 +231,7 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
         type: upfile.files[0].type
       }
       var savename = genFile();
-      var uploader = storage.child(savename.folder).child(savename.file).put(file);
+      var uploader = storage.child(savename.folder).child(savename.file).put(upfile.files[0]);
       uploader.on('state_changed', onUploading, onUploadError, onUploaded);
       data.upfile = {folder: 'root/board/' +savename.folder, name: savename.file, file: file};
     }
@@ -211,6 +239,8 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
       db.push(data).key; // firebase 
       onClose();
       listInit();
+      recent.innerHTML = '';
+      recentInit(ref);
     }
   }
 
@@ -235,10 +265,13 @@ function onWriteSubmit(e) { // btSave클릭시(글 저장시), validation 검증
   }
 
   function onSuccess(r) { // r: 실제 웹으로 접근 가능한 경로
+    console.log(r);
     data.upfile.path = r;
     db.push(data).key; // firebase 저장
     onClose();
     listInit();
+    recent.innerHTML = '';
+    recentInit(ref);
   }
 
   function onError(err) {
@@ -313,6 +346,23 @@ loading.addEventListener('click', onLoadingClick);
 
 
 /*************** start init ***************/
-// listInit();
-observer.observe(observerEl);
+observer = new IntersectionObserver(onObserver, {rootMargin: '-100px'});
+listInit();
+recent.innerHTML = '';
+recentInit(ref);
 
+
+
+/* var isImg = v.val().upfile && v.val().upfile.file.type !== allowType[3] // upfile이 이미지인 경우
+      if(isImg) setRecentHTML(v.key, v.val());
+      else { // 이미지가 아니라면
+        if(recent.querySelector('li')) {
+          var li = recent.querySelectorAll('li')
+          var idx = li[li.length - 1].dataset['idx'];
+          recentInit(ref.startAfter(idx));
+        }
+        else {
+          recentInit(ref);
+        } 
+      }
+      */
